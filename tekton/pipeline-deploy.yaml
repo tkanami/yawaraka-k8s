@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-demo
+spec:
+  tasks:
+    - name: git-clone
+      taskRef: 
+        name: git-checkout
+      params:
+        - name: gitRepositoryUrl
+          value: $(params.gitRepositoryUrl)
+      workspaces:
+        - name: shared
+          workspace: shared
+    - name: deloy
+      taskRef: 
+        name: deploy
+      params:
+        - name: manifestPath
+          value: $(params.manifestPath)
+      workspaces:
+        - name: shared
+          workspace: shared
+        - name: kubeconfig
+          workspace: kubeconfig
+      runAfter:
+        - git-clone
+  params:
+    - name: gitRepositoryUrl
+      description: 'URL of the GIT repository without protocol'
+    - name: manifestPath
+      description: 'path of the manifest to deploy'
+  workspaces:
+    - name: shared
+    - name: kubeconfig
+

@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: pipelinerun-demo-07
+spec:
+  pipelineRef: 
+    name: pipeline-demo
+  params: 
+    - name: gitRepositoryUrl
+      value: github.com/tkanami/yawaraka-k8s.git
+    - name: manifestPath
+      value: manifests/nginx.yaml
+  workspaces:
+    - name: kubeconfig
+      configMap:
+        name: tekton-kubeconfig
+    - name: shared
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi

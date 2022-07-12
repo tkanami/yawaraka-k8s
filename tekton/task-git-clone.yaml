@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-checkout
+spec:
+  params:
+    - name: gitRepositoryUrl
+      description: URL of the GIT repository without protocol
+  steps:
+    - name: git-clone
+      image: docker:git
+      env:
+        - name: GIT_CHECKOUT_DIR
+          value: $(workspaces.shared.path)/source
+      args:
+        - clone
+        - https://$(params.gitRepositoryUrl)
+        - $(GIT_CHECKOUT_DIR)
+      command:
+        - /usr/bin/git
+  workspaces:
+    - name: shared

@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy
+spec:
+  params:
+    - name: manifestPath
+      description: path of the manifest to deploy
+  steps:
+    - name: deploy
+      image: bitnami/kubectl
+      command: 
+        - /opt/bitnami/kubectl/bin/kubectl
+      args: 
+        - --kubeconfig=$(workspaces.kubeconfig.path)/kubeconfig
+        - apply
+        - -f
+        - $(workspaces.shared.path)/source/$(params.manifestPath)
+  workspaces:
+    - name: shared
+    - name: kubeconfig
