@@ -1,10 +1,16 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-nginx
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: nginx-app
     name: nginx
   name: nginx-service
+  namespace: demo-nginx
 spec:
   selector:
     app: nginx-app
@@ -23,6 +29,7 @@ metadata:
     app: nginx-app
     name: nginx
   name: nginx
+  namespace: demo-nginx
 spec:
   replicas: 1
   selector:
@@ -62,6 +69,7 @@ metadata:
     app: nginx-app
     name: nginx
   name: nginx-html
+  namespace: demo-nginx
 data: # 下記にPodに渡したい設定ファイルを定義
   index.html: | # ファイル名を定義
     <html> # 設定ファイルの中身を記載
